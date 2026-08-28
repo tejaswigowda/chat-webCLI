@@ -1,5 +1,7 @@
 # Chat webCLI
 
+<img src='demo.gif'>
+
 A browser-based LLM chat app that runs large language models **entirely in your browser** using [WebLLM](https://webllm.mlc.ai/) and WebGPU - no server, no API keys, no data leaves your device.
 
 ► **Live app:** [https://tejaswigowda.com/chat-webCLI/](https://tejaswigowda.com/chat-webCLI/)
