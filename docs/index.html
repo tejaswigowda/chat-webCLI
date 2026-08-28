@@ -21,15 +21,38 @@
       display: flex;
       flex: 1;
       overflow: hidden;
+      position: relative;
     }
 
     #sidebar {
       width: 250px;
+      flex-shrink: 0;
       background: #0d1117;
       border-right: 1px solid #2d3148;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+    }
+
+    /* Hamburger toggle - hidden on desktop */
+    #sidebar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #a78bfa;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+
+    /* Backdrop behind the off-canvas sidebar on mobile */
+    #sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 90;
     }
 
     #sidebar-header {
@@ -405,8 +428,6 @@
       color: #64748b;
       margin-bottom: 3px;
     }
-      flex-wrap: wrap;
-    }
 
     .msg-wrap { display: flex; flex-direction: column; }
     .msg-wrap.user { align-items: flex-end; }
@@ -484,6 +505,25 @@
     @media (max-width: 768px) {
       .msg { max-width: 85%; }
       #model-select { min-width: 160px; }
+
+      /* Show hamburger, turn sidebar into off-canvas drawer */
+      #sidebar-toggle { display: inline-flex; align-items: center; }
+
+      #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100dvh;
+        width: 80%;
+        max-width: 300px;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 2px 0 16px rgba(0, 0, 0, 0.4);
+      }
+
+      #sidebar.open { transform: translateX(0); }
+      #sidebar-backdrop.show { display: block; }
     }
 
     /* Mobile: stack header controls, full-width select + button */
@@ -492,6 +532,15 @@
         padding: 10px;
         border-radius: 8px;
       }
+
+      header h1 { font-size: 1rem; }
+
+      #model-select {
+        flex: 1 1 100%;
+        min-width: 0;
+      }
+
+      #load-btn { flex: 1; }
 
       #header-meta {
         flex-wrap: wrap;
@@ -542,6 +591,7 @@
 </head>
 <body>
   <header>
+    <button id="sidebar-toggle" aria-label="Toggle chat list" aria-expanded="false"><i class="fas fa-bars"></i></button>
     <h1><i class="fas fa-comments"></i> Chat webCLI</h1>
     <span class="pill">offline-first</span>
     
@@ -563,6 +613,7 @@
   </header>
 
   <div id="container">
+    <div id="sidebar-backdrop"></div>
     <div id="sidebar">
       <div id="sidebar-header">
         <button id="new-chat-btn"><i class="fas fa-plus"></i> New Chat</button>
@@ -612,6 +663,25 @@
     const sendBtn      = document.getElementById("send-btn");
     const newChatBtn   = document.getElementById("new-chat-btn");
     const chatList     = document.getElementById("chat-list");
+    const sidebar        = document.getElementById("sidebar");
+    const sidebarToggle  = document.getElementById("sidebar-toggle");
+    const sidebarBackdrop = document.getElementById("sidebar-backdrop");
+
+    // ──── Mobile sidebar (off-canvas) ────
+    function openSidebar() {
+      sidebar.classList.add("open");
+      sidebarBackdrop.classList.add("show");
+      sidebarToggle.setAttribute("aria-expanded", "true");
+    }
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      sidebarBackdrop.classList.remove("show");
+      sidebarToggle.setAttribute("aria-expanded", "false");
+    }
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
+    });
+    sidebarBackdrop.addEventListener("click", closeSidebar);
 
     // ──── Semantic Embedding Functions ────
     async function initEmbeddings() {
@@ -879,7 +949,7 @@
           chatItem.appendChild(textDiv);
           chatItem.appendChild(deleteBtn);
           chatItem.addEventListener("click", () => {
-            if (editingChatId === null) switchChat(chat.id);
+            if (editingChatId === null) { switchChat(chat.id); closeSidebar(); }
           });
           
           chatList.appendChild(chatItem);
@@ -1335,7 +1405,7 @@
     });
 
     // Multi-chat event listeners
-    newChatBtn.addEventListener("click", createNewChat);
+    newChatBtn.addEventListener("click", () => { createNewChat(); closeSidebar(); });
 
     // Initialize IndexedDB and chats on load
     (async () => {
