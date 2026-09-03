@@ -6,6 +6,16 @@ A browser-based LLM chat app that runs large language models **entirely in your 
 
 ► **Live app:** [https://tejaswigowda.com/chat-webCLI/](https://tejaswigowda.com/chat-webCLI/)
 
+## Paper
+
+This tool is a reference implementation of the **Web-CLI** architecture, described in:
+
+> **The Web-CLI: Verifiable Privacy for Tools, Models, and Inference Engines in the Browser**
+> Tejaswi Gowda, Arizona State University.
+> arXiv: https://arxiv.org/abs/2608.28950
+
+The paper defines the four properties (fidelity, progressive disclosure, offline-first, zero egress), presents four reference implementations, and argues that for sensitive data, client-side should be the default architecture — because it makes privacy a *verifiable* technical property rather than a policy promise.
+
 Another tool in the webCLI family of zero-egress, offline-first browser tools, alongside [ffmpeg-webCLI](https://github.com/tejaswigowda/ffmpeg-webCLI) and [whisper-webCLI](https://github.com/tejaswigowda/whisper-webCLI). Same look and feel, same privacy promise: your conversations never leave your device.
 
 ---
@@ -239,11 +249,20 @@ Then open `http://localhost:3000` (or the port shown by your server).
 
 ---
 
-## Acknowledgments
+## Part of the Web-CLI family
 
-Part of the webCLI family of zero-egress browser tools:
-- [ffmpeg-webCLI](https://github.com/tejaswigowda/ffmpeg-webCLI) – Video & audio processing
-- [whisper-webCLI](https://github.com/tejaswigowda/whisper-webCLI) – Speech-to-text transcription
+A family of zero-egress browser tools — your data never leaves your device, verifiable in DevTools. All free, open source, and installable as offline PWAs.
+
+- **[ffmpeg-webCLI](https://github.com/tejaswigowda/ffmpeg-webCLI)** — full FFmpeg in the browser: trim, convert, compress, caption, and 30+ video operations. ([live](https://tejaswigowda.com/ffmpeg-webCLI/))
+- **[whisper-webCLI](https://github.com/tejaswigowda/whisper-webCLI)** — speech-to-text with Whisper (Transformers.js), ~99 languages, on-device. ([live](https://tejaswigowda.com/whisper-webCLI/))
+- **[chat-webCLI](https://github.com/tejaswigowda/chat-webCLI)** — local LLM chat via WebLLM/WebGPU; prompts never leave the device. ([live](https://tejaswigowda.com/chat-webCLI/)) (this tool)
+- **[3mf-webCLI](https://github.com/tejaswigowda/3mf-webCLI)** — GLB → multi-material 3MF for AMS/MMU 3D printing, client-side. ([live](https://tejaswigowda.com/3mf-webCLI/))
+
+Architecture paper: [arXiv:2608.28950](https://arxiv.org/abs/2608.28950)
+
+---
+
+## Acknowledgments
 
 - [WebLLM](https://github.com/mlc-ai/web-llm) — ML compilation & WebGPU runtime
 - [OpenAI](https://openai.com/) — Model architectures and best practices
